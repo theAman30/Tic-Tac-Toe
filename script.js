@@ -21,6 +21,7 @@ const resetGame = () => {
   turnO = true;
   enableBoxes();
   msgContainer.classList.add("hide");
+  msg.innerText = "";
 };
 
 boxes.forEach((box) => {
@@ -41,16 +42,14 @@ boxes.forEach((box) => {
 });
 
 const disableBoxes = () => {
-  for (let box of boxes) {
-    box.disabled = true;
-  }
+  boxes.forEach(box => box.disabled = true);
 };
 
 const enableBoxes = () => {
-  for (let box of boxes) {
+  boxes.forEach(box => {
     box.disabled = false;
     box.innerText = "";
-  }
+  });
 };
 
 const showWinner = (winner) => {
@@ -60,17 +59,27 @@ const showWinner = (winner) => {
   disableBoxes();
 };
 
+const checkTie = () => {
+  return [...boxes].every(box => box.innerText !== "");
+};
+
 const checkWinner = () => {
-  for (pattern of winPatterns) {
+  for (let pattern of winPatterns) {
     let pos1Val = boxes[pattern[0]].innerText;
     let pos2Val = boxes[pattern[1]].innerText;
     let pos3Val = boxes[pattern[2]].innerText;
 
-    if (pos1Val != "" && pos2Val != "" && pos3Val != "") {
+    if (pos1Val !== "" && pos2Val !== "" && pos3Val !== "") {
       if (pos1Val === pos2Val && pos2Val === pos3Val) {
         showWinner(pos1Val);
+        return;
       }
     }
+  }
+  if (checkTie()) {
+    msg.innerHTML = "It's a Tie!";
+    msg.style.fontSize = "2.5rem";
+    msgContainer.classList.remove("hide");
   }
 };
 
